@@ -13,7 +13,7 @@ from webtest_docgen import (
     FormParam,
     QueryParam,
     HeaderParam,
-    UriParam
+    URLParam
 )
 
 
@@ -28,7 +28,7 @@ def mockup_resources():
             path='/user/{user_id}',
             method='get',
             description='Get single user',
-            params=UriParam(
+            params=URLParam(
                 name='user_id',
                 type_='integer'
             )
@@ -37,7 +37,7 @@ def mockup_resources():
             path='/user/{user_id}/image',
             method='get',
             description='Get user images',
-            params=UriParam(
+            params=URLParam(
                 name='user_id',
                 type_='integer'
             )
@@ -47,11 +47,11 @@ def mockup_resources():
             method='get',
             description='Get user image by id',
             params=[
-                UriParam(
+                URLParam(
                     name='user_id',
                     type_='integer'
                 ),
-                UriParam(
+                URLParam(
                     name='image_id',
                     type_='integer'
                 )

@@ -7,7 +7,7 @@ from webtest_docgen import (
     Response,
     FormParam,
     QueryParam,
-    UriParam,
+    URLParam,
     HeaderParam,
     ExampleResponse,
     BodyFormatJson
@@ -62,7 +62,7 @@ class ModelTestCase(unittest.TestCase):
             ]
         )
 
-        user_id_param = UriParam(
+        user_id_param = URLParam(
             name='user_id',
             type_='integer',
             required=True
