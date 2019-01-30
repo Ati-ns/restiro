@@ -158,7 +158,7 @@ class Param:
         }
 
 
-class UriParam(Param):
+class URLParam(Param):
     def __init__(self, *args, required: bool = True, **kwargs):
         super().__init__(*args, required=required, **kwargs)
 

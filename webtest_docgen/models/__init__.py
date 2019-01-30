@@ -1,7 +1,7 @@
 """
     API Documentation models, based on RAML 0.8
 """
-from .parameters import UriParam, QueryParam, HeaderParam, FormParam, Param
+from .parameters import URLParam, QueryParam, HeaderParam, FormParam, Param
 from .example import (
     ResourceExample,
     ExampleResponse,

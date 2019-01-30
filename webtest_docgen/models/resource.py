@@ -1,6 +1,6 @@
 import types
 from typing import List, Union, Generator
-from .parameters import UriParam, FormParam, HeaderParam, QueryParam, Param
+from .parameters import URLParam, FormParam, HeaderParam, QueryParam, Param
 from .example import ResourceExample
 from .response import Response
 
@@ -61,7 +61,7 @@ class Resource:
 
     def set_params(self, *args):
         for item in args:
-            if isinstance(item, UriParam):
+            if isinstance(item, URLParam):
                 self.uri_params.append(item)
 
             elif isinstance(item, QueryParam):

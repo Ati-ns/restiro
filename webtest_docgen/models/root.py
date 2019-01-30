@@ -2,13 +2,13 @@ from typing import List, Union
 from urllib.parse import urlparse
 from .resource import Resource, Resources
 from .document import Document, Documents
-from .parameters import UriParam
+from .parameters import URLParam
 
 
 class DocumentationRoot:
 
     def __init__(self, title: str, version: str = None, media_type: str = None,
-                 base_uri: str = None, base_uri_params: List[UriParam] = None,
+                 base_uri: str = None, base_uri_params: List[URLParam] = None,
                  protocols: List[str] = None,
                  resources: Union[Resource, List[Resource]] = None,
                  documents: Union[Document, List[Document]] = None):
