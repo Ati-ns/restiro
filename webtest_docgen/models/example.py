@@ -28,7 +28,7 @@ class BodyFormatYaml(BodyFormat):
     header_mime = 'application/x-yaml'
 
 
-class Request:
+class ExampleRequest:
     def __init__(self, path: str, method: str, headers: dict = None,
                  query_strings: dict = None, form_params: dict = None,
                  text: str = None):
@@ -109,7 +109,7 @@ class ExampleResponse:
 
 
 class ResourceExample:
-    def __init__(self, request: Request, response: ExampleResponse):
+    def __init__(self, request: ExampleRequest, response: ExampleResponse):
         self.request = request
         self.response = response
 

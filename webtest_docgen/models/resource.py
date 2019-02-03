@@ -1,8 +1,7 @@
-import types
+from types import GeneratorType
 from typing import List, Union, Generator
 from .parameters import URLParam, FormParam, HeaderParam, QueryParam, Param
 from .example import ResourceExample
-from .response import Response
 
 
 class Resource:
@@ -11,9 +10,7 @@ class Resource:
                  description: str = None, tags: List[str] = None,
                  params: Union[Param, List[Param]] = None,
                  security: dict = None,
-                 responses: Union[Response, List[Response]] = None,
-                 examples: Union[ResourceExample,
-                                 List[ResourceExample], Generator] = None):
+                 examples: Union[List[ResourceExample], Generator] = None):
         """
         Resource
         :param path: The URI relative to the `DocumentationRoot.base_uri` and 
@@ -34,8 +31,6 @@ class Resource:
         :param params: Collection of parameters (Include any inheritance
                        of `Param`)
         :param security: Collection of permissions
-        :param responses: Collection of responses include success and error
-                          response
         :param examples: Collection of examples
         """
         self.path = path
@@ -46,7 +41,6 @@ class Resource:
         self.uri_params = []
         self.query_params = []
         self.form_params = []
-        self.responses = responses if responses else []
         self.security = security
         self.header_params = []
         self.examples = examples if examples else []
@@ -54,7 +48,7 @@ class Resource:
         if params:
             if isinstance(params, list):
                 self.set_params(*params)
-            elif isinstance(params, types.GeneratorType):
+            elif isinstance(params, GeneratorType):
                 self.set_params(*list(params))
             else:
                 self.set_params(params)
@@ -102,7 +96,6 @@ class Resource:
             'uri_params': [param.to_dict() for param in self.uri_params],
             'query_params': [param.to_dict() for param in self.query_params],
             'form_params': [param.to_dict() for param in self.form_params],
-            'response': [response.to_dict() for response in self.responses],
             'examples': [example.to_dict() for example in self.examples]
         }
 
@@ -121,7 +114,10 @@ class Resources(dict):
         input_path_parts = path[1:].split('/')
         filtered_resources = [
             x for x in self.values()
-            if x.method == method and len(x.path[1:].split('/')) == len(input_path_parts)
+            if (
+                x.method == method and
+                len(x.path[1:].split('/')) == len(input_path_parts)
+            )
         ]
 
         def _route(resources, part_index=0):

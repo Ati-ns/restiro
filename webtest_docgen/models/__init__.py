@@ -5,7 +5,7 @@ from .parameters import URLParam, QueryParam, HeaderParam, FormParam, Param
 from .example import (
     ResourceExample,
     ExampleResponse,
-    Request,
+    ExampleRequest,
     BodyFormat,
     BodyFormatJson,
     BodyFormatYaml,
@@ -14,4 +14,3 @@ from .example import (
 from .resource import Resource, Resources
 from .document import Document
 from .root import DocumentationRoot
-from .response import Response
