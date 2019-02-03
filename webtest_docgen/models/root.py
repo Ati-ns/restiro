@@ -53,7 +53,7 @@ class DocumentationRoot:
                          or a Level 1 Template URI as defined in RFC 6570 [RFC6570].
                          The ``base_uri`` property SHOULD only be used as a reference value. 
                          API client generators MAY make the ``base_uri`` configurable by the API client's users.
-        :param base_uri_params: The parameters (`UriParam`) used in ``base_uri``. 
+        :param base_uri_params: The parameters (`URLParam`) used in ``base_uri``. 
                                 using parameters in ``base_uri`` can be like
                                 ``http://site.com/{my_parameter_name}``.
         :param protocols: A RESTful API can be reached via HTTP, HTTPS, or both. 

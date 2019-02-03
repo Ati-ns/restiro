@@ -3,8 +3,8 @@ from . import BaseProvider
 from webtest_docgen import (
     Resource,
     Document,
-    Response,
-    Request,
+    ExampleResponse,
+    ExampleRequest,
     ResourceExample)
 from webtest_docgen.models.parameters import Param
 
@@ -12,7 +12,7 @@ from webtest_docgen.models.parameters import Param
 class MarkdownRepresentations:
 
     @staticmethod
-    def _repr_response_body(response: Response):
+    def _repr_response_body(response: ExampleResponse):
         syntax_language = response.body_format
         return '```%s\n%s\n```' % (
             syntax_language.name if syntax_language else '',
@@ -20,19 +20,19 @@ class MarkdownRepresentations:
         )
 
     @staticmethod
-    def _repr_request_headers(request: Request):
+    def _repr_request_headers(request: ExampleRequest):
         return '```\n%s\n```' % (
             request.text.split('\r\n\r\n')[0]
         )
 
     @staticmethod
-    def _repr_response_headers(response: Response):
+    def _repr_response_headers(response: ExampleResponse):
         return '```\n%s\n```' % (
             response.repr_headers()
         )
 
     @staticmethod
-    def _repr_request_body(request: Request):
+    def _repr_request_body(request: ExampleRequest):
         syntax_language = request.body_format
         return '```%s\n%s\n```' % (
             syntax_language.name if syntax_language else '',
