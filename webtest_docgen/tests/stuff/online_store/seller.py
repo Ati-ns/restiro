@@ -14,7 +14,7 @@ class Seller:
         @api {get} /seller/:sellerId Get a seller
         @apiVersion 1.0.0
         @apiGroup Seller
-        
+
         @apiUrlParam {Integer} sellerId
         """
         return self

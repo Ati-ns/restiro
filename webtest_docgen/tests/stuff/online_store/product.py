@@ -6,7 +6,6 @@
 @apiQueryParam model
 @apiQueryParam purchasable
 @apiQueryParam manufacturedAt
-@apiSuccess {Integer} productId
 """
 
 
@@ -18,9 +17,12 @@ class Product:
         @apiVersion 1.0.0
         @apiGroup Product
 
+        @apiPermission god
+        @apiPermission operator
+
         @apiQueryParam [sort]
         
-        @apiUse ProductGetParams
+        @apiUse ProductGetParams Some product params
         """
         """
         @api {get} /product/:productId Get a seller
@@ -39,7 +41,7 @@ class Product:
 
         @apiUrlParam {Integer} productId
         
-        @apiParam {String} title Product title
+        @apiParam {String} title (Product title)
         @apiParam {String} model Product Model 
         @apiParam {Boolean} purchasable Can purchase this product
         @apiParam {DateTime} manufacturedAt When product manufactured
