@@ -1,10 +1,9 @@
 import unittest
 
-from webtest_docgen import (
+from webtest_docgen.models import (
     DocumentationRoot,
     Document,
     Resource,
-    Response,
     FormParam,
     QueryParam,
     URLParam,
@@ -76,7 +75,7 @@ class ModelTestCase(unittest.TestCase):
             )
         )
         self.assertEqual(user_resource_get.__filename__, 'user-me-get')
-        self.assertEqual(10, len(user_resource_get.to_dict().keys()))
+        self.assertEqual(9, len(user_resource_get.to_dict().keys()))
         self.assertEqual(user_resource_get.__repr__(), 'GET /user/me')
 
         user_resource_put = Resource(
@@ -206,14 +205,6 @@ class ModelTestCase(unittest.TestCase):
             body='Welcome'
         )
         self.assertEqual(response_example.body_format, BodyFormatJson)
-
-        response = Response(
-            status=400,
-            description='bad request',
-            body=[{'name': 'test'}]
-        )
-        self.assertEqual(len(response.to_dict().keys()), 3)
-        response.__repr__()
 
 
 if __name__ == '__main__':  # pragma: no cover
