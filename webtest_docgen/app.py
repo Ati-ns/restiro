@@ -1,5 +1,5 @@
 from webtest import TestApp
-from . import ResourceExample, Request, ExampleResponse, DocumentationRoot
+from . import ResourceExample, ExampleRequest, ExampleResponse, DocumentationRoot
 import functools
 
 
@@ -9,7 +9,11 @@ class TestDocumentApp(TestApp):
         self._docs_root = docs_root
         super().__init__(*args, **kwargs)
 
-    def do_request(self, req, status=None, expect_errors=None):
+    def do_request(self, req, status=None, expect_errors=None, doc=False):
+        if not doc:
+            return super().do_request(req=req, status=status,
+                                      expect_errors=expect_errors)
+
         resources_method = str(req.method).lower()
         resource_path = str(req.path)
         resource = self._docs_root.resources.find(resource_path,
@@ -21,7 +25,7 @@ class TestDocumentApp(TestApp):
 
         def get_response(func):
             if resource:
-                example_request = Request(
+                example_request = ExampleRequest(
                     path=resource.path,
                     method=resource.method,
                     headers=dict(req.headers),
