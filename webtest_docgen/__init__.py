@@ -1,5 +1,5 @@
 from .models import (
-    Resources, Resource, Response, ResourceExample, Request, ExampleResponse,
+    Resources, Resource, ResourceExample, ExampleRequest, ExampleResponse,
     DocumentationRoot, Document,
     Param, URLParam, QueryParam, HeaderParam, FormParam,
     BodyFormat, BodyFormatJson, BodyFormatYaml, BodyFormatXml
