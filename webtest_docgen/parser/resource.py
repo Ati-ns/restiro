@@ -6,7 +6,7 @@ from webtest_docgen.constants import (
 )
 
 from webtest_docgen.models import (
-    FormParam, QueryParam, HeaderParam, URLParam, Resource, Response
+    FormParam, QueryParam, HeaderParam, URLParam, Resource
 )
 
 from webtest_docgen.exceptions import MissedParameter, InvalidDefinition
@@ -29,12 +29,8 @@ class DocstringApiResource:
         self.title = None
         self.params = []
         self.permissions = []
-        self.deprecated = False
         self.definitions = definitions
-        self.deprecated_description = None
         self.description = None
-        self.error_responses = []
-        self.success_responses = []
 
         docstring = docstring.lstrip()
         prepared_lines = []
@@ -58,9 +54,6 @@ class DocstringApiResource:
                 self.parse_group(line)
                 self.group = self.group.strip()
 
-            elif line.startswith('@apiDeprecated'):
-                self.parse_deprecated(line)
-
             elif line.startswith('@apiPermission '):
                 self.parse_permission(line)
 
@@ -80,12 +73,6 @@ class DocstringApiResource:
             elif line.startswith('@apiHeadParam '):
                 self.parse_param(line, 'head')
 
-            elif line.startswith('@apiSuccess '):
-                self.parse_success(line)
-
-            elif line.startswith('@apiError '):
-                self.parse_error(line)
-
             elif line.startswith('@apiUse '):
                 new_lines = self.parse_use_define(line)
                 prepared_lines.extend(new_lines)
@@ -93,8 +80,12 @@ class DocstringApiResource:
     def parse_use_define(self, line: str):
         name_match, name = self._get_name(line)
         name = name.strip()
-        definition_lines = str(self.definitions[name].content).split('\n')
-        is_found = True
+        definition_lines = []
+        is_found = None
+        for key, define in self.definitions.items():
+            if key == name:
+                definition_lines = str(define.content).split('\n')
+                is_found = True
         if not is_found:
             raise InvalidDefinition('There is not such apiDefine %s' % name)
 
@@ -225,57 +216,6 @@ class DocstringApiResource:
         self.description = t if not self.description \
             else '\n'.join((self.description, t))
 
-    def parse_deprecated(self, line: str):
-        self.deprecated = True
-        self.deprecated_description = line.replace('@apiDeprecated ', '')
-
-    def parse_success(self, line: str):
-        group_match, group = self._get_group(line)
-        type_match, type_ = self._get_type(line)
-        name_match, name = self._get_name(line)
-
-        if name_match is None:
-            raise MissedParameter('Missed api parameter `name`')
-
-        group_match_span = (-1, -1) \
-            if group_match is None else group_match.span()
-        type_match_span = (-1, -1) if type_match is None else type_match.span()
-        name_match_span = name_match.span()
-        description = line[max(type_match_span[1],
-                               group_match_span[1], name_match_span[1]):]
-        des_lines = description.split('\n')
-        des_result = ''
-        for st in des_lines:
-            des_result = des_result + st.strip() + ' '
-
-        self.success_responses.append({
-            'name': name,
-            'group': group,
-            'type': type_,
-            'description': des_result
-        })
-
-    def parse_error(self, line: str):
-        # self.error_responses =
-        group_match, group = self._get_group(line)
-        type_match, type_ = self._get_type(line)
-        name_match, name = self._get_name(line)
-
-        group_match_span = (-1, -1) \
-            if group_match is None else group_match.span()
-        type_match_span = (-1, -1) if type_match is None else type_match.span()
-        name_match_span = name_match.span()
-
-        if not group:
-            group = 400
-        self.error_responses.append({
-            'group': group,
-            'type': type_,
-            'name': name,
-            'description': line[max(type_match_span[1], group_match_span[1],
-                                    name_match_span[1]):].strip()
-        })
-
     def __repr__(self):
         return '\n'.join((
             'method: %s' % self.method,
@@ -285,9 +225,7 @@ class DocstringApiResource:
             'group: %s' % self.group,
             'description: %s' % self.description,
             'permissions: %s' % self.permissions.__repr__(),
-            'params: %s' % self.params.__repr__(),
-            'error_responses: %s' % self.error_responses.__repr__(),
-            'success_responses: %s' % self.success_responses.__repr__()
+            'params: %s' % self.params.__repr__()
         ))
 
     def to_model(self):
@@ -303,21 +241,6 @@ class DocstringApiResource:
             self.params
         ))
 
-        response_in_model = []
-        new_response = Response(
-            status=200,
-            description='ok',
-            body=self.success_responses)
-
-        response_in_model.append(new_response)
-        for response in self.error_responses:
-            error_response = Response(
-                status=int(response['group']),
-                description=response['description'],
-                body=[{'name': response['name'], 'type': response['type']}]
-            )
-            response_in_model.append(error_response)
-
         return Resource(
             path=self.path,
             method=self.method,
@@ -325,6 +248,5 @@ class DocstringApiResource:
             display_name=self.title,
             description=self.description,
             security={'roles': self.permissions},
-            params=params_in_model,
-            responses=response_in_model
+            params=params_in_model
         )
