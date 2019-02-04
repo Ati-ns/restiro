@@ -110,8 +110,11 @@ def mockup_doc_root():
 
 
 def mockup_app_tests(wsgi_app):
+    wsgi_app.doc = True
     wsgi_app.get('/user', 'a=b')
+    wsgi_app.doc = True
     wsgi_app.get('/user', 'b=c')
+    wsgi_app.doc = True
     wsgi_app.post('/user', params={
         'full_name': 'Lily'
     })
@@ -137,7 +140,8 @@ class WebAppTestCase(unittest.TestCase):
         self.docs_root = mockup_doc_root()
         self.wsgi_app = TestDocumentApp(
             app=debug_app,
-            docs_root=self.docs_root
+            docs_root=self.docs_root,
+            lint=False
         )
 
 

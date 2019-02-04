@@ -7,13 +7,15 @@ class AppTestCase(WebAppTestCase):
 
     def test_app(self):
         # Simple request
+        self.wsgi_app.doc = True
         self.wsgi_app.get('/far/away')
+        self.wsgi_app.doc = True
         resp_one = self.wsgi_app.get('/user', 'a=b')
         resp_one.mustcontain('a=b')
 
         # Mockup
         self.docs_root.set_resources(*mockup_resources())
-
+        self.wsgi_app.doc = True
         # Fill examples by request
         self.wsgi_app.get('/user')
         resource = self.docs_root.resources.find(path='/user', method='get')
@@ -21,6 +23,7 @@ class AppTestCase(WebAppTestCase):
         self.assertEqual(resource.examples[0].response.status, 200)
         self.assertEqual(resource.examples[0].response.body_format, None)
 
+        self.wsgi_app.doc = True
         # JSON Request
         self.wsgi_app.post_json('/user', {
             'full_name': 'Meyti'

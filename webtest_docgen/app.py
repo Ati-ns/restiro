@@ -1,5 +1,10 @@
-from webtest import TestApp
-from . import ResourceExample, ExampleRequest, ExampleResponse, DocumentationRoot
+from webtest import TestApp, utils
+from . import (
+    ResourceExample,
+    ExampleRequest,
+    ExampleResponse,
+    DocumentationRoot
+)
 import functools
 
 
@@ -7,10 +12,11 @@ class TestDocumentApp(TestApp):
 
     def __init__(self, *args, docs_root: DocumentationRoot, **kwargs):
         self._docs_root = docs_root
+        self.doc = False
         super().__init__(*args, **kwargs)
 
-    def do_request(self, req, status=None, expect_errors=None, doc=False):
-        if not doc:
+    def do_request(self, req, status=None, expect_errors=None):
+        if not self.doc:
             return super().do_request(req=req, status=status,
                                       expect_errors=expect_errors)
 
@@ -47,7 +53,22 @@ class TestDocumentApp(TestApp):
                 return response
             return func()
 
+        self.doc = False
+
         return get_response(
             functools.partial(super().do_request, req=req, status=status,
                               expect_errors=expect_errors)
         )
+
+    def _gen_request(self, method, url, params=utils.NoDefault,
+                     headers=None, extra_environ=None, status=None,
+                     upload_files=None, expect_errors=False,
+                     content_type=None, doc=False):
+        if doc:
+            self.doc = True
+
+        return super()._gen_request(
+                method=method, url=url, params=params, headers=headers,
+                extra_environ=extra_environ, status=status,
+                upload_files=upload_files, expect_errors=expect_errors,
+                content_type=content_type)

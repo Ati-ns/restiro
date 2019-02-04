@@ -27,7 +27,6 @@ class ParserTestCase(WebAppTestCase):
         resources_by_version = Parser.load_from_path(online_store_path)
 
         for y, x in resources_by_version['1.0.0'].items():
-            print(y, '////////////')
             pprint(x.to_dict())
 
         example_resource = [
