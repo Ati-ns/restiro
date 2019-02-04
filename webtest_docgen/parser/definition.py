@@ -2,7 +2,7 @@
 class DocstringApiDefinition:
     name = None
     title = None
-    description = None
+    description = ''
     content = ''
 
     def __init__(self, docstring):
@@ -13,7 +13,7 @@ class DocstringApiDefinition:
                 self.title = exploded_line[2] \
                     if len(exploded_line) > 2 else None
                 self.description = ' '.join(exploded_line[3:]) \
-                    if len(exploded_line) > 3 else None
+                    if len(exploded_line) > 3 else ''
 
             elif line.startswith(' '):
                 self.description += ' %s' % line.lstrip()
