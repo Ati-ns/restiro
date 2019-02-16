@@ -80,7 +80,9 @@ class DocumentationRoot:
                 self.set_documents(documents)
 
         if resources:
-            if isinstance(resources, list):
+            if isinstance(resources, Resources):
+                self.resources = resources
+            elif isinstance(resources, list):
                 self.set_resources(*resources)
             else:
                 self.set_resources(resources)
